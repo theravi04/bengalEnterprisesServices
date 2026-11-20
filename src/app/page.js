@@ -59,9 +59,20 @@ export default function Home() {
         {/* Hero Content */}
         <div className="relative z-10 mx-auto w-full max-w-7xl px-6 sm:px-10 lg:px-12">
           <div className="max-w-[450px]">
-            <h1 className="text-2xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl md:text-4xl">
-              We Are Among the Best in Banquet Setup, Event Management,
-              Catering, Hoarding & Advertising, and Contract Services
+            <h1 className="text-3xl leading-[1.08] tracking-tight text-white sm:text-5xl md:text-4xl">
+              We Are Among
+              <br />
+              the Best in
+              <br />
+              Banquet Setup,
+              <br />
+              Event Management,
+              <br />
+              Catering, Hoarding
+              <br />
+              & Advertising, and
+              <br />
+              Contract Services
             </h1>
 
             <Link
