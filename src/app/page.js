@@ -4,17 +4,21 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const heroImages = ["/images/1.png", "/images/2.png"];
+const heroImages = [
+  "/images/home/h1.jpg", 
+  "/images/home/h2.jpg",
+  "/images/home/h3.png",
+  "/images/home/h4.jpeg",
+  "/images/home/h5.jpeg",
+  "/images/home/h6.jpg",
+  "/images/home/h7.jpg"
+];
 
 const organisations = [
-  "Organisation 1",
-  "Organisation 2",
-  "Organisation 3",
-  "Organisation 4",
-  "Organisation 5",
-  "Organisation 6",
-  "Organisation 7",
-  "Organisation 8",
+  "Indian Railways",
+  "Uttar Pradesh Govt.",
+  "Private Companies",
+  "PSUs",
 ];
 
 export default function Home() {
@@ -68,34 +72,32 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/45" />
 
         {/* Hero Content */}
-<div className="absolute inset-x-0 bottom-16 z-10 mx-auto w-full max-w-7xl px-6 sm:bottom-auto sm:relative sm:px-10 lg:px-12">
-  <div className="max-w-[520px]">
+        <div className="absolute inset-x-0 bottom-16 z-10 mx-auto w-full max-w-7xl px-6 sm:bottom-auto sm:relative sm:px-10 lg:px-12">
+          <div className="max-w-[520px]">
+            <h1 className="text-3xl leading-[1.08] tracking-tight text-white sm:text-5xl md:text-4xl">
+              We Are Among
+              <br />
+              the Best in
+              <br />
+              Banquet Setup,
+              <br />
+              Event Management,
+              <br />
+              Catering, Hoarding
+              <br />
+              & Advertising, and
+              <br />
+              Contract Services
+            </h1>
 
-    <h1 className="text-3xl leading-[1.08] tracking-tight text-white sm:text-5xl md:text-4xl">
-      We Are Among
-      <br />
-      the Best in
-      <br />
-      Banquet Setup,
-      <br />
-      Event Management,
-      <br />
-      Catering, Hoarding
-      <br />
-      & Advertising, and
-      <br />
-      Contract Services
-    </h1>
-
-    <Link
-      href="/contact"
-      className="mt-8 inline-flex min-h-[60px] w-full max-w-[430px] items-center justify-center bg-white px-6 py-5 text-center text-base font-semibold text-black transition-colors duration-300 hover:bg-[#0096c7] hover:text-white sm:mt-10 sm:min-h-[64px] sm:text-lg"
-    >
-      Let’s talk — Send a message
-    </Link>
-
-  </div>
-</div>
+            <Link
+              href="/contact"
+              className="mt-8 inline-flex min-h-[60px] w-full max-w-[430px] items-center justify-center bg-white px-6 py-5 text-center text-base font-semibold text-black transition-colors duration-300 hover:bg-[#0096c7] hover:text-white sm:mt-10 sm:min-h-[64px] sm:text-lg"
+            >
+              Let’s talk — Send a message
+            </Link>
+          </div>
+        </div>
       </section>
 
       {/* Organisations Section */}
@@ -124,7 +126,7 @@ export default function Home() {
             {organisations.map((name, index) => (
               <span
                 key={index}
-                className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white px-7 py-3.5 text-sm font-medium text-gray-700 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#0096c7] hover:text-[#0096c7] hover:shadow-md sm:px-8 sm:py-4 sm:text-base"
+                className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-gray-300 bg-white px-7 py-3 text-sm font-medium text-gray-700 transition-all duration-300 hover:-translate-y-1 hover:border-[#0096c7] hover:text-[#0096c7] hover:shadow-md sm:min-h-[54px] sm:px-8 sm:text-base"
               >
                 {name}
               </span>

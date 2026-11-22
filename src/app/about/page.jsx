@@ -24,33 +24,54 @@ export default function About() {
 
             <div className="mt-5 h-1 w-16 rounded-full bg-[#0096c7]" />
 
-            <div className="mt-8 space-y-6 text-base leading-8 text-gray-600 sm:text-lg">
+            <div className="space-y-4 text-base leading-7 text-gray-600">
               <p>
                 With over{" "}
                 <strong className="font-semibold text-gray-900">
-                  [X] years of experience
-                </strong>{" "}
-                in the catering and event management industry, we specialise in
-                delivering quality catering solutions and comprehensive event
-                management services. We have had the privilege of working with{" "}
-                <strong className="font-semibold text-gray-900">
-                  [mention organisations, companies, institutions or clients]
+                  10 years of experience
                 </strong>
-                , providing services for a wide range of events and occasions.
+                , Bengal Enterprises and Services is a trusted name in event
+                management, catering and hospitality across Varanasi and Uttar
+                Pradesh. We have served leading organisations, institutions,
+                corporate clients and private customers across weddings,
+                corporate events, religious functions, fairs and grand
+                celebrations.
               </p>
 
               <p>
-                Our expertise includes catering arrangements, food and beverage
-                services, event planning, venue coordination, decoration, and
-                complete event execution. We are committed to maintaining high
-                standards of quality, professionalism and customer satisfaction
-                while ensuring every event is organised seamlessly.
+                Led by our Founder and Proprietor,{" "}
+                <strong className="font-semibold text-gray-900">
+                  Mr. Prabir Dutta
+                </strong>
+                , with over{" "}
+                <strong className="font-semibold text-gray-900">
+                  25 years of industry experience
+                </strong>
+                , our work is driven by quality, reliability and a client-first
+                approach. Our services include event management, premium
+                catering, venue coordination, decoration, stage management,
+                branding, festive and fair arrangements.
               </p>
 
               <p>
-                At Bengal Enterprises and Services, we believe in delivering
-                reliable services, creating memorable experiences and building
-                long-term relationships with our clients.
+                Over the last 3–4 years, we have also expanded into{" "}
+                <strong className="font-semibold text-gray-900">
+                  banquet hall development and construction
+                </strong>
+                , successfully designing and constructing 2–3 premium banquet
+                halls. This has strengthened our ability to deliver complete
+                solutions, from venue development and planning to event
+                execution.
+              </p>
+
+              <p>
+                By bringing{" "}
+                <strong className="font-semibold text-gray-900">
+                  catering, event management, banquet construction and branding
+                </strong>{" "}
+                under one roof, we aim to provide seamless services, memorable
+                experiences and lasting relationships built on trust and
+                customer satisfaction.
               </p>
             </div>
 
@@ -93,14 +114,10 @@ export default function About() {
 
               <div className="mt-4 h-1 w-12 rounded-full bg-[#0096c7]" />
 
-              <p className="mt-5 text-base leading-8 text-gray-600">
-                [Introduction about the person, professional experience and role
-                in Bengal Enterprises & Services.]
-              </p>
-
               <p className="mt-4 text-base leading-8 text-gray-600">
-                [His commitment to quality, customer satisfaction,
-                professionalism and the continued growth of the organisation.]
+                Committed to delivering quality, ensuring customer satisfaction,
+                maintaining professionalism, and fostering the continued growth
+                of the organisation.
               </p>
             </div>
           </div>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -11,9 +12,9 @@ const services = [
     description:
       "Professional banquet arrangements, venue setup and complete banquet management for various occasions.",
     images: [
-      "/images/1.png",
-      "/images/2.png",
-      "/images/services/banquet-3.jpg",
+      "/images/banquet/1.jpg",
+      "/images/banquet/2.jpg",
+      "/images/banquet/3.jpg",
     ],
   },
   {
@@ -22,9 +23,9 @@ const services = [
     description:
       "Comprehensive event planning, coordination, decoration and execution for memorable occasions.",
     images: [
-      "/images/services/event-1.jpg",
-      "/images/services/event-2.jpg",
-      "/images/services/event-3.jpg",
+      "/images/event/1.jpeg",
+      "/images/event/2.jpg",
+      "/images/event/3.jpeg",
     ],
   },
   {
@@ -33,9 +34,9 @@ const services = [
     description:
       "Quality catering arrangements and food and beverage services for different events and occasions.",
     images: [
-      "/images/services/catering-1.jpg",
-      "/images/services/catering-2.jpg",
-      "/images/services/catering-3.jpg",
+      "/images/catering/c1.jpeg",
+      "/images/catering/c2.jpg",
+      "/images/catering/c3.jpeg",
     ],
   },
   {
@@ -44,9 +45,9 @@ const services = [
     description:
       "Advertising and hoarding solutions to support business visibility and promotional activities.",
     images: [
-      "/images/services/advertising-1.jpg",
-      "/images/services/advertising-2.jpg",
-      "/images/services/advertising-3.jpg",
+      "/images/hoarding/h1.jpg",
+      "/images/hoarding/h2.jpg",
+      "/images/hoarding/h3.jpg",
     ],
   },
   {
@@ -55,45 +56,74 @@ const services = [
     description:
       "Reliable contract-based services and professional execution according to client requirements.",
     images: [
-      "/images/services/contract-1.jpg",
-      "/images/services/contract-2.jpg",
-      "/images/services/contract-3.jpg",
+      "/images/contract/c1.jpg",
+      "/images/contract/c2.jpg",
+      "/images/contract/c3.jpeg",
+    ],
+  },
+  {
+    id: 6,
+    title: "Festive Arrangements",
+    description:
+      "Creative festive decorations, themed setups, lighting and complete arrangements for festivals and special celebrations.",
+    images: [
+      "/images/festive/f1.jpg",
+      "/images/festive/f2.jpg",
+      "/images/festive/f3.jpg",
+    ],
+  },
+  {
+    id: 7,
+    title: "Fair Arrangements",
+    description:
+      "Complete arrangements for fairs, exhibitions and public events, including stall setup, venue management and event coordination.",
+    images: [
+      "/images/fair/f1.jpg",
+      "/images/fair/f2.jpg",
+      "/images/fair/f3.jpg",
     ],
   },
 ];
 
 export default function ServicesPage() {
+  // Desktop selected service
   const [activeService, setActiveService] = useState(0);
-  const [desktopImage, setDesktopImage] = useState(0);
 
-  const [mobileService, setMobileService] = useState(0);
-  const [mobileImage, setMobileImage] = useState(0);
+  // Mobile slideshow state
+  const [mobileSlide, setMobileSlide] = useState(0);
 
+  // Image lightbox state
   const [lightbox, setLightbox] = useState(null);
 
+  // Restore previously selected desktop service after mounting
+  // This prevents server/client hydration mismatch
+  useEffect(() => {
+    const savedService = localStorage.getItem("activeService");
+
+    if (savedService !== null) {
+      const index = Number(savedService);
+
+      if (
+        Number.isInteger(index) &&
+        index >= 0 &&
+        index < services.length
+      ) {
+        setActiveService(index);
+      }
+    }
+  }, []);
+
+  // Desktop selected service
   const currentService = services[activeService];
 
-  // Desktop automatic image rotation
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setDesktopImage((prev) => (prev + 1) % 3);
-    }, 3500);
-
-    return () => clearInterval(timer);
-  }, [activeService]);
+  // Mobile service and image derived from current slide
+  const mobileService = Math.floor(mobileSlide / 3);
+  const mobileImage = mobileSlide % 3;
 
   // Mobile automatic image and service rotation
   useEffect(() => {
     const timer = setInterval(() => {
-      setMobileImage((prevImage) => {
-        if (prevImage < 2) {
-          return prevImage + 1;
-        }
-
-        setMobileService((prevService) => (prevService + 1) % services.length);
-
-        return 0;
-      });
+      setMobileSlide((prev) => (prev + 1) % (services.length * 3));
     }, 3500);
 
     return () => clearInterval(timer);
@@ -102,21 +132,27 @@ export default function ServicesPage() {
   // Desktop service selection
   const selectService = (index) => {
     setActiveService(index);
-    setDesktopImage(0);
+    localStorage.setItem("activeService", String(index));
   };
 
   // Mobile navigation
   const nextMobile = () => {
-    setMobileImage(0);
-    setMobileService((prev) => (prev + 1) % services.length);
+    setMobileSlide((prev) => {
+      const nextService = (Math.floor(prev / 3) + 1) % services.length;
+      return nextService * 3;
+    });
   };
 
   const prevMobile = () => {
-    setMobileImage(0);
-    setMobileService((prev) => (prev - 1 + services.length) % services.length);
+    setMobileSlide((prev) => {
+      const previousService =
+        (Math.floor(prev / 3) - 1 + services.length) % services.length;
+
+      return previousService * 3;
+    });
   };
 
-  // Image lightbox
+  // Image lightbox - close using Escape key
   useEffect(() => {
     if (!lightbox) return;
 
@@ -144,7 +180,9 @@ export default function ServicesPage() {
   return (
     <main className="min-h-screen bg-white">
       <section className="mx-auto max-w-7xl px-5 pt-8 pb-14 sm:px-8 md:pt-10 md:pb-16 lg:px-12 lg:pt-12 lg:pb-20">
-        {/* Heading */}
+
+        {/* ================= HEADING ================= */}
+
         <div className="mb-8 text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-[#0096c7]">
             What We Offer
@@ -165,7 +203,9 @@ export default function ServicesPage() {
         {/* ================= DESKTOP VIEW ================= */}
 
         <div className="hidden md:grid md:grid-cols-[0.85fr_1.5fr] md:items-center md:gap-10 lg:gap-16">
+
           {/* Left: Service List */}
+
           <div>
             <h2 className="mb-7 text-2xl font-bold text-gray-900">
               Our Expertise
@@ -196,6 +236,7 @@ export default function ServicesPage() {
                     </span>
 
                     {/* Description appears below selected service */}
+
                     {activeService === index && (
                       <p className="mt-3 text-sm leading-7 text-gray-600">
                         {service.description}
@@ -208,7 +249,7 @@ export default function ServicesPage() {
                     className={`mt-0.5 shrink-0 transition-transform ${
                       activeService === index
                         ? "translate-x-1 text-[#0096c7]"
-                        : "text-gray-400 group-hover:translate-x-1"
+                        : "text-gray-400"
                     }`}
                   />
                 </button>
@@ -216,83 +257,41 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          {/* Right: Three Image Gallery */}
+          {/* Right: Static Three Image Gallery */}
+
           <div className="min-w-0">
-            <div className="mb-5 flex items-center justify-between gap-3">
-              <div>
-                <p className="text-sm font-semibold text-[#0096c7]">
-                  Featured Service
-                </p>
+            <div className="mb-5">
+              <p className="text-sm font-semibold text-[#0096c7]">
+                Featured Service
+              </p>
 
-                <h2 className="mt-1 text-xl font-bold text-gray-900 lg:text-2xl">
-                  {currentService.title}
-                </h2>
-              </div>
-
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  aria-label="Previous image"
-                  onClick={() => setDesktopImage((prev) => (prev + 2) % 3)}
-                  className="rounded-full border p-2 transition hover:bg-gray-100"
-                >
-                  <ChevronLeft size={20} />
-                </button>
-
-                <button
-                  type="button"
-                  aria-label="Next image"
-                  onClick={() => setDesktopImage((prev) => (prev + 1) % 3)}
-                  className="rounded-full border p-2 transition hover:bg-gray-100"
-                >
-                  <ChevronRight size={20} />
-                </button>
-              </div>
+              <h2 className="mt-1 text-xl font-bold text-gray-900 lg:text-2xl">
+                {currentService.title}
+              </h2>
             </div>
 
             <div className="grid grid-cols-3 gap-3 lg:gap-4">
-              {[0, 1, 2].map((offset) => {
-                const index = (desktopImage + offset) % 3;
-                const image = currentService.images[index];
-
-                return (
-                  <button
-                    key={`${activeService}-${index}`}
-                    type="button"
-                    onClick={() =>
-                      setLightbox({
-                        src: image,
-                        title: currentService.title,
-                      })
-                    }
-                    aria-label={`Enlarge ${currentService.title} image ${index + 1}`}
-                    className="group relative aspect-[3/4] overflow-hidden rounded-xl bg-gray-100"
-                  >
-                    <Image
-                      src={image}
-                      alt={`${currentService.title} ${index + 1}`}
-                      fill
-                      sizes="(max-width: 1024px) 25vw, 20vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="mt-5 flex justify-center gap-2">
-              {[0, 1, 2].map((dot) => (
+              {currentService.images.map((image, index) => (
                 <button
-                  key={dot}
+                  key={`${activeService}-${index}`}
                   type="button"
-                  onClick={() => setDesktopImage(dot)}
-                  aria-label={`Show image ${dot + 1}`}
-                  className={`h-2 rounded-full transition-all ${
-                    desktopImage === dot
-                      ? "w-7 bg-[#0096c7]"
-                      : "w-2 bg-gray-300"
-                  }`}
-                />
+                  onClick={() =>
+                    setLightbox({
+                      src: image,
+                      title: currentService.title,
+                    })
+                  }
+                  aria-label={`Enlarge ${currentService.title} image ${index + 1}`}
+                  className="group relative aspect-[3/4] overflow-hidden rounded-xl bg-gray-100"
+                >
+                  <Image
+                    src={image}
+                    alt={`${currentService.title} ${index + 1}`}
+                    fill
+                    sizes="(max-width: 1024px) 25vw, 20vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                </button>
               ))}
             </div>
           </div>
@@ -302,7 +301,9 @@ export default function ServicesPage() {
 
         <div className="md:hidden">
           <div className="relative overflow-hidden rounded-2xl shadow-lg">
+
             {/* Mobile Image */}
+
             <button
               type="button"
               onClick={() =>
@@ -315,19 +316,21 @@ export default function ServicesPage() {
               className="relative block aspect-[4/5] w-full overflow-hidden bg-gray-100"
             >
               <Image
-                key={`${mobileService}-${mobileImage}`}
+                key={mobileSlide}
                 src={services[mobileService].images[mobileImage]}
                 alt={services[mobileService].title}
                 fill
                 priority
-                sizes="100vw"
+                sizes="(max-width: 767px) calc(100vw - 40px), 100vw"
                 className="object-cover transition-opacity duration-500"
               />
 
               {/* Image Overlay */}
+
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
 
               {/* Service Information */}
+
               <div className="absolute inset-x-0 bottom-0 p-6 text-left sm:p-8">
                 <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-sky-300">
                   Our Services
@@ -343,7 +346,8 @@ export default function ServicesPage() {
               </div>
             </button>
 
-            {/* Previous */}
+            {/* Previous Button */}
+
             <button
               type="button"
               onClick={prevMobile}
@@ -353,7 +357,8 @@ export default function ServicesPage() {
               <ChevronLeft size={22} />
             </button>
 
-            {/* Next */}
+            {/* Next Button */}
+
             <button
               type="button"
               onClick={nextMobile}
@@ -364,16 +369,14 @@ export default function ServicesPage() {
             </button>
           </div>
 
-          {/* Mobile Indicators */}
+          {/* Mobile Service Indicators */}
+
           <div className="mt-6 flex justify-center gap-2">
             {services.map((service, index) => (
               <button
                 key={service.id}
                 type="button"
-                onClick={() => {
-                  setMobileService(index);
-                  setMobileImage(0);
-                }}
+                onClick={() => setMobileSlide(index * 3)}
                 aria-label={`Go to ${service.title}`}
                 aria-current={mobileService === index ? "true" : undefined}
                 className={`h-2 rounded-full transition-all duration-300 ${
@@ -418,7 +421,7 @@ export default function ServicesPage() {
               src={lightbox.src}
               alt={lightbox.title}
               fill
-              sizes="100vw"
+              sizes="(max-width: 767px) calc(100vw - 32px), 80vw"
               className="rounded-xl object-contain"
             />
 
