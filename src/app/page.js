@@ -110,7 +110,7 @@ export default function Home() {
             </p>
 
             <h2 className="text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">
-              Organisations We Have Served
+              Organisations We Have Worked For
             </h2>
 
             <div className="mx-auto mt-5 h-[3px] w-12 rounded-full bg-[#0096c7]" />
