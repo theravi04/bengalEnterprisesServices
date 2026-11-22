@@ -23,9 +23,9 @@ const services = [
     description:
       "Comprehensive event planning, coordination, decoration and execution for memorable occasions.",
     images: [
-      "/images/eventManagement/1.jpeg",
-      "/images/eventManagement/2.jpg",
-      "/images/eventManagement/3.jpeg",
+      "/images/eventManagement/e1.jpeg",
+      "/images/eventManagement/e2.jpg",
+      "/images/eventManagement/e3.jpeg",
     ],
   },
   {
