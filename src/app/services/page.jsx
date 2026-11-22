@@ -89,14 +89,15 @@ export default function ServicesPage() {
   // Desktop selected service
   const [activeService, setActiveService] = useState(0);
 
-  // Mobile slideshow state
-  const [mobileSlide, setMobileSlide] = useState(0);
+  // Individual mobile image index for every service
+  const [mobileImages, setMobileImages] = useState(
+    services.map(() => 0)
+  );
 
   // Image lightbox state
   const [lightbox, setLightbox] = useState(null);
 
-  // Restore previously selected desktop service after mounting
-  // This prevents server/client hydration mismatch
+  // Restore previously selected desktop service
   useEffect(() => {
     const savedService = localStorage.getItem("activeService");
 
@@ -116,40 +117,40 @@ export default function ServicesPage() {
   // Desktop selected service
   const currentService = services[activeService];
 
-  // Mobile service and image derived from current slide
-  const mobileService = Math.floor(mobileSlide / 3);
-  const mobileImage = mobileSlide % 3;
-
-  // Mobile automatic image and service rotation
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setMobileSlide((prev) => (prev + 1) % (services.length * 3));
-    }, 3500);
-
-    return () => clearInterval(timer);
-  }, []);
-
   // Desktop service selection
   const selectService = (index) => {
     setActiveService(index);
     localStorage.setItem("activeService", String(index));
   };
 
-  // Mobile navigation
-  const nextMobile = () => {
-    setMobileSlide((prev) => {
-      const nextService = (Math.floor(prev / 3) + 1) % services.length;
-      return nextService * 3;
-    });
-  };
+  // Automatically rotate images in all mobile service sliders
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setMobileImages((prev) =>
+        prev.map((imageIndex, serviceIndex) => {
+          const totalImages = services[serviceIndex].images.length;
 
-  const prevMobile = () => {
-    setMobileSlide((prev) => {
-      const previousService =
-        (Math.floor(prev / 3) - 1 + services.length) % services.length;
+          return (imageIndex + 1) % totalImages;
+        })
+      );
+    }, 3500);
 
-      return previousService * 3;
-    });
+    return () => clearInterval(timer);
+  }, []);
+
+  // Individual mobile slider navigation
+  const changeMobileImage = (serviceIndex, direction) => {
+    setMobileImages((prev) =>
+      prev.map((imageIndex, index) => {
+        if (index !== serviceIndex) return imageIndex;
+
+        const totalImages = services[serviceIndex].images.length;
+
+        return (
+          (imageIndex + direction + totalImages) % totalImages
+        );
+      })
+    );
   };
 
   // Image lightbox - close using Escape key
@@ -235,8 +236,6 @@ export default function ServicesPage() {
                       {service.title}
                     </span>
 
-                    {/* Description appears below selected service */}
-
                     {activeService === index && (
                       <p className="mt-3 text-sm leading-7 text-gray-600">
                         {service.description}
@@ -257,7 +256,7 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          {/* Right: Static Three Image Gallery */}
+          {/* Right: Three Image Gallery */}
 
           <div className="min-w-0">
             <div className="mb-5">
@@ -299,99 +298,134 @@ export default function ServicesPage() {
 
         {/* ================= MOBILE VIEW ================= */}
 
-        <div className="md:hidden">
-          <div className="relative overflow-hidden rounded-2xl shadow-lg">
+        <div className="md:hidden space-y-10">
 
-            {/* Mobile Image */}
+          {services.map((service, serviceIndex) => {
+            const currentImage = mobileImages[serviceIndex];
 
-            <button
-              type="button"
-              onClick={() =>
-                setLightbox({
-                  src: services[mobileService].images[mobileImage],
-                  title: services[mobileService].title,
-                })
-              }
-              aria-label={`Enlarge ${services[mobileService].title} image`}
-              className="relative block aspect-[4/5] w-full overflow-hidden bg-gray-100"
-            >
-              <Image
-                key={mobileSlide}
-                src={services[mobileService].images[mobileImage]}
-                alt={services[mobileService].title}
-                fill
-                priority
-                sizes="(max-width: 767px) calc(100vw - 40px), 100vw"
-                className="object-cover transition-opacity duration-500"
-              />
-
-              {/* Image Overlay */}
-
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
-
-              {/* Service Information */}
-
-              <div className="absolute inset-x-0 bottom-0 p-6 text-left sm:p-8">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-sky-300">
-                  Our Services
-                </p>
-
-                <h2 className="text-2xl font-bold leading-tight text-white sm:text-3xl">
-                  {services[mobileService].title}
-                </h2>
-
-                <p className="mt-3 text-sm leading-6 text-gray-200">
-                  {services[mobileService].description}
-                </p>
-              </div>
-            </button>
-
-            {/* Previous Button */}
-
-            <button
-              type="button"
-              onClick={prevMobile}
-              aria-label="Previous service"
-              className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-md"
-            >
-              <ChevronLeft size={22} />
-            </button>
-
-            {/* Next Button */}
-
-            <button
-              type="button"
-              onClick={nextMobile}
-              aria-label="Next service"
-              className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-md"
-            >
-              <ChevronRight size={22} />
-            </button>
-          </div>
-
-          {/* Mobile Service Indicators */}
-
-          <div className="mt-6 flex justify-center gap-2">
-            {services.map((service, index) => (
-              <button
+            return (
+              <div
                 key={service.id}
-                type="button"
-                onClick={() => setMobileSlide(index * 3)}
-                aria-label={`Go to ${service.title}`}
-                aria-current={mobileService === index ? "true" : undefined}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  mobileService === index
-                    ? "w-8 bg-[#0096c7]"
-                    : "w-2 bg-gray-300"
-                }`}
-              />
-            ))}
-          </div>
+                className="min-w-0"
+              >
 
-          <p className="mt-3 text-center text-xs text-gray-400">
-            Explore our services
-          </p>
+                {/* Service Heading */}
+
+                <div className="mb-4">
+                  <div className="mb-2">
+  <span className="block h-1 w-10 rounded-full bg-[#0096c7]" />
+</div>
+
+                  <h2 className="text-xl font-bold leading-tight text-gray-900">
+                    {service.title}
+                  </h2>
+
+                  <p className="mt-2 text-sm leading-6 text-gray-500">
+                    {service.description}
+                  </p>
+                </div>
+
+                {/* Individual Service Image Slider */}
+
+                <div className="relative overflow-hidden rounded-2xl bg-gray-100 shadow-lg">
+
+                  {/* Image */}
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setLightbox({
+                        src: service.images[currentImage],
+                        title: service.title,
+                      })
+                    }
+                    aria-label={`Enlarge ${service.title} image ${currentImage + 1}`}
+                    className="relative block aspect-[4/3] w-full overflow-hidden"
+                  >
+                    <Image
+                      key={`${service.id}-${currentImage}`}
+                      src={service.images[currentImage]}
+                      alt={`${service.title} image ${currentImage + 1}`}
+                      fill
+                      sizes="(max-width: 767px) calc(100vw - 40px), 100vw"
+                      className="object-cover transition-opacity duration-500"
+                    />
+
+                    {/* Image Overlay */}
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+
+                    {/* Image Counter */}
+
+                    <div className="absolute bottom-3 right-3 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white">
+                      {currentImage + 1} / {service.images.length}
+                    </div>
+                  </button>
+
+                  {/* Previous Image Button */}
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      changeMobileImage(serviceIndex, -1)
+                    }
+                    aria-label={`Previous ${service.title} image`}
+                    className="absolute left-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-md transition hover:bg-white"
+                  >
+                    <ChevronLeft size={21} />
+                  </button>
+
+                  {/* Next Image Button */}
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      changeMobileImage(serviceIndex, 1)
+                    }
+                    aria-label={`Next ${service.title} image`}
+                    className="absolute right-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-md transition hover:bg-white"
+                  >
+                    <ChevronRight size={21} />
+                  </button>
+                </div>
+
+                {/* Individual Image Indicators */}
+
+                <div className="mt-4 flex justify-center gap-2">
+                  {service.images.map((image, imageIndex) => (
+                    <button
+                      key={imageIndex}
+                      type="button"
+                      onClick={() =>
+                        setMobileImages((prev) =>
+                          prev.map((value, index) =>
+                            index === serviceIndex
+                              ? imageIndex
+                              : value
+                          )
+                        )
+                      }
+                      aria-label={`View image ${imageIndex + 1} of ${service.title}`}
+                      aria-current={
+                        currentImage === imageIndex
+                          ? "true"
+                          : undefined
+                      }
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        currentImage === imageIndex
+                          ? "w-8 bg-[#0096c7]"
+                          : "w-2 bg-gray-300"
+                      }`}
+                    />
+                  ))}
+                </div>
+
+              </div>
+            );
+          })}
+
         </div>
+
       </section>
 
       {/* ================= IMAGE ENLARGEMENT ================= */}
@@ -431,6 +465,7 @@ export default function ServicesPage() {
           </div>
         </div>
       )}
+
     </main>
   );
 }
